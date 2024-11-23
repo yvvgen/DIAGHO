@@ -1,0 +1,28 @@
+# Contenu du .gitignore
+touch .gitignore
+cat << EOF > .gitignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Poetry
+poetry.lock
+.venv/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+.coverage
+htmlcov/
+
+# Build
+*.egg-info/
+dist/
+build/
+EOF
