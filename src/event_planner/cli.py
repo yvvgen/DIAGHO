@@ -1,6 +1,7 @@
 import click
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 from event_planner.event import Event
 from event_planner.event_manager import EventManager
 
