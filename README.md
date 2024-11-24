@@ -19,10 +19,13 @@ Une fois dans le conteneur, lancez les tests avec pytest :
 ```bash
 pytest
 ```
+Les tests ne couvrent pas tout le code mais seulement la majorité la plus importante des fonctionalités.
 
 ## Utilisation de la CLI
 
 Dans le conteneur, utilisez la commande `event-planner` suivie des sous-commandes.
+
+Pour une description de l'utilisation, tapez`event-planner --help`.
 
 ### Créer quelques conflits 
 
@@ -37,7 +40,7 @@ event-planner add -n "Micro-sieste" -s "2024-11-25 13:45" -e "2024-11-25 16:00" 
     -d "15 minutes qui se transforment mystérieusement en 2h15"
 
 event-planner add -n "Debuggage de la prod" -s "2024-11-26 09:00" -e "2024-11-26 19:00" \
-    -d "Quand un bug en prod englobe TOUS vos autres événements"
+    -d "Quand un bug en prod englobe TOUS les autres événements de la journée"
 
 event-planner add -n "Daily standup" -s "2024-11-26 10:00" -e "2024-11-26 10:15" \
     -d "Coincé entre deux bugs, mais toujours présent"
@@ -72,6 +75,8 @@ En conflit avec:
   - Micro-sieste
 ```
 
+Il est aussi possible de spécifier une fenêtre de temps pour lister (et/ou lister les conflits).
+
 ### Résoudre les conflits (ou pas)
 
 ```bash
@@ -79,4 +84,4 @@ En conflit avec:
 event-planner remove <id-de-la-reunion>
 ```
 
-Les événements sont automatiquement sauvegardés dans `~/.event_planner/events.json`.
+Les événements sont automatiquement sauvegardés dans `~/.event_planner/events.json`, mais dans le conteneur je n'ai pas paramétré de persistance de donnée.
