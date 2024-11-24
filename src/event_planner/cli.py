@@ -81,7 +81,7 @@ def list(conflicts: bool, start: Optional[datetime] = None, end: Optional[dateti
         # Filtrer les conflits par date si nécessaire
         if start or end:
             filtered_conflicts = {}
-            events_in_range = set(manager.list_events_between(start, end))
+            events_in_range = manager.list_events_between(start, end)
             
             for event_id, conflicting_events in conflict_dict.items():
                 event = manager.get_event_by_id(event_id)

@@ -123,6 +123,8 @@ class EventManager:
         Retourne la liste des événements entre deux dates, triés chronologiquement.
         Si start ou end ne sont pas spécifiés, ne filtre pas sur ces critères.
         
+        C'est possible qu'un événement commence avant start ou finisse après end, le tout est qu'il empiète sur la fenêtre temporelle donnée
+        
         Args:
             start (datetime, optional): Date de début de la période
             end (datetime, optional): Date de fin de la période
