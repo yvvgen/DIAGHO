@@ -16,17 +16,17 @@ def cli():
 
 @cli.command()
 @click.option('--name', '-n', required=True, help='Nom de l\'événement')
-@click.option('--start', '-s', required=True, 
+@click.option('--start_time', '-s', required=True, 
               help='Date et heure de début (format: YYYY-MM-DD HH:MM)')
-@click.option('--end', '-e', required=True,
+@click.option('--end_time', '-e', required=True,
               help='Date et heure de fin (format: YYYY-MM-DD HH:MM)')
 @click.option('--description', '-d', help='Description de l\'événement')
-def add(name: str, start: str, end: str, description: str = None):
+def add(name: str, start_time: str, end_time: str, description: str = None):
     """Ajoute un nouvel événement"""
     try:
         # Parse les dates
-        start_time = datetime.fromisoformat(start)
-        end_time = datetime.fromisoformat(end)
+        start_time = datetime.fromisoformat(start_time)
+        end_time = datetime.fromisoformat(end_time)
         
         # Crée l'événement
         event = Event(
