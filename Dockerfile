@@ -4,13 +4,15 @@ WORKDIR /app
 
 RUN pip install poetry
 
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml ./
 COPY src/ ./src/
 COPY tests/ ./tests/
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 
-RUN poetry install && \
+
+RUN poetry lock \
+    poetry install && \
     poetry build && \
     pip install dist/*.whl
 
