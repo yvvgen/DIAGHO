@@ -60,14 +60,42 @@ def remove(event_id: str):
 
 @cli.command()
 @click.option('--conflicts', '-c', is_flag=True, help='Affiche uniquement les événements en conflit')
-def list(conflicts: bool):
-    """Liste tous les événements ou affiche les conflits"""
+@click.option('--start', '-s', type=click.DateTime(), help='Date de début (format: YYYY-MM-DD HH:MM)')
+@click.option('--end', '-e', type=click.DateTime(), help='Date de fin (format: YYYY-MM-DD HH:MM)')
+def list(conflicts: bool, start: Optional[datetime] = None, end: Optional[datetime] = None):
+    """Liste tous les événements ou affiche les conflits.
+    
+    Peut être filtré par période en spécifiant --start et/ou --end.
+    """
     manager = get_event_manager()
     
     if conflicts:
         conflict_dict = manager.find_conflicts()
         if not conflict_dict:
             click.echo("Aucun conflit trouvé")
+            return
+            
+        # Filtrer les conflits par date si nécessaire
+        if start or end:
+            filtered_conflicts = {}
+            events_in_range = set(manager.list_events_between(start, end))
+            
+            for event_id, conflicting_events in conflict_dict.items():
+                event = manager.get_event_by_id(event_id)
+                if event and event in events_in_range:
+                    # Ne garder que les événements en conflit qui sont aussi dans la période
+                    filtered_conflicts[event_id] = [
+                        e for e in conflicting_events 
+                        if e in events_in_range
+                    ]
+                    if filtered_conflicts[event_id]:  # Supprimer si plus de conflits dans la période
+                        continue
+                    del filtered_conflicts[event_id]
+            
+            conflict_dict = filtered_conflicts
+            
+        if not conflict_dict:
+            click.echo("Aucun conflit trouvé dans la période spécifiée")
             return
             
         click.echo("Conflits détectés:")
@@ -79,12 +107,25 @@ def list(conflicts: bool):
                 for conf_event in conflicting_events:
                     click.echo(f"  - {conf_event.name} (ID: {conf_event.id})")
     else:
-        events = manager.list_events()
+        events = manager.list_events_between(start, end)
         if not events:
-            click.echo("Aucun événement trouvé")
+            if start or end:
+                click.echo("Aucun événement trouvé dans la période spécifiée")
+            else:
+                click.echo("Aucun événement trouvé")
             return
             
-        click.echo("Liste des événements:")
+        # Afficher la période si spécifiée
+        if start or end:
+            click.echo("Liste des événements", nl=False)
+            if start:
+                click.echo(f" depuis le {start.strftime('%Y-%m-%d %H:%M')}", nl=False)
+            if end:
+                click.echo(f" jusqu'au {end.strftime('%Y-%m-%d %H:%M')}", nl=False)
+            click.echo(":")
+        else:
+            click.echo("Liste des événements:")
+            
         for event in events:
             click.echo(f"\nID: {event.id}")
             click.echo(f"Nom: {event.name}")
@@ -92,6 +133,5 @@ def list(conflicts: bool):
             click.echo(f"Fin: {event.end_time}")
             if event.description:
                 click.echo(f"Description: {event.description}")
-
 if __name__ == '__main__':
     cli()

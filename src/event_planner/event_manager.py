@@ -117,6 +117,27 @@ class EventManager:
             self._events,
             key=lambda event: (event.start_time, event.end_time)
         )
+    
+    def list_events_between(self, start: Optional[datetime] = None, end: Optional[datetime] = None) -> List[Event]:
+        """
+        Retourne la liste des événements entre deux dates, triés chronologiquement.
+        Si start ou end ne sont pas spécifiés, ne filtre pas sur ces critères.
+        
+        Args:
+            start (datetime, optional): Date de début de la période
+            end (datetime, optional): Date de fin de la période
+            
+        Returns:
+            List[Event]: Liste des événements dans la période
+        """
+        events = self.list_events()  # Déjà triés chronologiquement
+        
+        if start:
+            events = [e for e in events if e.end_time >= start]
+        if end:
+            events = [e for e in events if e.start_time <= end]
+            
+        return events
 
     def get_event_by_id(self, event_id: str) -> Optional[Event]:
         """
