@@ -61,8 +61,10 @@ def remove(event_id: str):
 
 @cli.command()
 @click.option('--conflicts', '-c', is_flag=True, help='Affiche uniquement les événements en conflit')
-@click.option('--start', '-s', type=click.DateTime(), help='Date de début (format: YYYY-MM-DD HH:MM)')
-@click.option('--end', '-e', type=click.DateTime(), help='Date de fin (format: YYYY-MM-DD HH:MM)')
+@click.option('--start', '-s', type=click.DateTime(formats=["%Y-%m-%d %H:%M"]), 
+              help='Date de début (format: YYYY-MM-DD HH:MM)')
+@click.option('--end', '-e', type=click.DateTime(formats=["%Y-%m-%d %H:%M"]), 
+              help='Date de fin (format: YYYY-MM-DD HH:MM)')
 def list(conflicts: bool, start: Optional[datetime] = None, end: Optional[datetime] = None):
     """Liste tous les événements ou affiche les conflits.
     
