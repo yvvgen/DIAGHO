@@ -44,18 +44,38 @@ class Event:
     
     def overlaps(self, other_event: 'Event') -> bool:
         """
-        Vérifie si l'événement actuel chevauche un autre événement
+        Vérifie si l'événement actuel chevauche un autre événement.
+        
+        Vérifie tous les cas de chevauchement possibles:
+        - Un événement commence pendant l'autre
+        - Un événement se termine pendant l'autre
+        - Un événement englobe complètement l'autre (2 cas possibles)
         
         Args:
             other_event (Event): L'événement à comparer
         
         Returns:
             bool: True s'il y a chevauchement, False sinon
+        
+        Raises:
+            ValueError: Si on compare un événement avec lui-même
         """
         if self.id == other_event.id:
-            raise ValueError("C'est le même évenement")
-        return (other_event.start_time <= self.start_time < other_event.end_time or 
-                other_event.start_time < self.end_time <= other_event.end_time)
+            raise ValueError("Impossible de comparer un événement avec lui-même")
+            
+        # Vérifie si l'un des événements commence pendant l'autre
+        starts_during = (
+            other_event.start_time <= self.start_time < other_event.end_time or
+            self.start_time <= other_event.start_time < self.end_time
+        )
+        
+        # Vérifie si l'un des événements englobe complètement l'autre
+        is_encompassing = (
+            (self.start_time <= other_event.start_time and self.end_time >= other_event.end_time) or
+            (other_event.start_time <= self.start_time and other_event.end_time >= self.end_time)
+        )
+        
+        return starts_during or is_encompassing
     
     def __str__(self) -> str:
         """
