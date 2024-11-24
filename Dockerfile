@@ -11,7 +11,7 @@ COPY tests/ ./tests/
 ENV POETRY_VIRTUALENVS_CREATE=false
 
 
-RUN poetry lock \
+RUN poetry lock &&\
     poetry install && \
     poetry build && \
     pip install dist/*.whl
